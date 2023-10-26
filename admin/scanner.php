@@ -35,7 +35,8 @@ $latynToKyryl = array(
     "}"=>"Я",
     "{"=>"Ь",
     "#"=>"Ц",
-    " "=> " "
+    " "=> " ",
+    "*"=> "*"
 );
 require('header.php');
 $id_code = $_GET["id"];
@@ -58,96 +59,67 @@ if(isset($_POST["addTxt"])) {
     $wrong = 0;
     if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
         $r = file_get_contents($targetFile);
-        $start = 1;
         $spisok = [];
-        while($start+160 < strlen($r)) {
-            $fio = '';
-            $phone = '';
-            $languge = '';
-            $math = '';
-            $read = '';
-            $analogia = '';
-            $grammer = '';
-            $test_code = '';
-            $fioIs = true;
-            $phoneIs = true;
-            $langugeIs = true;
-            $mathIs = true;
-            $readIs = true;
-            $analogiaIs = true;
-            $grammerIs = true;
-            for ($i=$start; $i < strlen($r); $i++) { 
+        $k = 0;
+        while ($k + 160 < strlen($r)) {
+            $numeric = '';
+            for ($i=$k+160; $i < strlen($r); $i++) { 
                 if (is_numeric($r[$i])) {
-                    $fioIs = false;
-                    if ($phoneIs) {
-                        $phone .=$r[$i];
-                    } else $test_code .= $r[$i];
-                } else {
-                    if ($test_code != '') {
-                        $start = $i;
-                        break;
+                    $numeric .= $r[$i];
+                } else if ($numeric != '') {
+                    $line=substr($r, $k, $i-$k);
+                    $code_test = '';
+                    $grammer = '';
+                    $ojt = '';
+                    $analogia = '';
+                    $math = '';
+                    $language = '';
+                    $phone = '';
+                    $fio = '';
+                    for ($j=strlen($line)-1; $j >= 0 ; $j--) { 
+                        $l = $line[$j];
+                        if (!is_numeric($l)) {
+                                $code_test = substr($line, $j+1, strlen($line) - $j);
+                                $j -= 30;
+                                $grammer = substr($line, $j+1, 30);
+                                echo strlen($grammer),'==', $line[$j], '<br>';
+                                $j -= 30;
+                                $ojt = substr($line, $j+1, 30);
+                                $j -= 30;
+                                $analogia = substr($line, $j+1, 30);
+                                $j -= 60;
+                                $math = substr($line, $j+1, 60);
+                                $j -= 1;
+                                $language = substr($line, $j+1, 1);
+                                $j -= 10;
+                                $phone = substr($line, $j+1, 10);
+                                for ($o=0; $o < $j; $o++) { 
+                                    $fio .= $latynToKyryl[$line[$o]];
+                                }
+                                $j = 0;
+                                $spisok[] = array(
+                                    'fio' => $fio,
+                                    'phone' => $phone,
+                                    'language' => $language,
+                                    'math' => $math,
+                                    'read' => $ojt,
+                                    'analogia' => $analogia,
+                                    'grammer' => $grammer,
+                                    'test_code' => $code_test
+                                );
+                                if ($code_test != $ucode) {
+                                    $spisok = [];
+                                    unlink($targetFile);
+                                    header("location: wrongCode.php");
+                                }
+                        }
                     }
-                    if ($phoneIs && $phone != '') {
-                        $phoneIs = false;
-                    }
-                    if ($fioIs) {
-                        $fio .= $latynToKyryl[$r[$i]];
-                    }else if ($langugeIs && ($r[$i] =='K' || $r[$i] == 'R')) {
-                        if ($r[$i] != " ") {
-                            $languge .= $r[$i];
-                        }
-                        $langugeIs = false;
-                    } else if ($mathIs){
-                        for ($j=$i; $j < $i + 60 ; $j++) { 
-                            if ($r[$j] == ' ') {
-                                $math .= '-';
-                            } else $math .= $r[$j];
-                        }
-                        $i += 59;
-                        $mathIs = false;
-                    } else if ($analogiaIs){
-                        for ($j=$i; $j < $i + 30 ; $j++) { 
-                            if ($r[$j] == ' ') {
-                                $analogia .= '-';
-                            } else $analogia .= $r[$j];
-                        }
-                        $i += 29;
-                        $analogiaIs = false;
-                    } else if ($readIs){
-                        for ($j=$i; $j < $i + 30 ; $j++) { 
-                            if ($r[$j] == ' ') {
-                                $read .= '-';
-                            } else $read .= $r[$j];
-                        }
-                        $i += 29;
-                        $readIs = false;
-                    } else if ($grammerIs){
-                        for ($j=$i; $j < $i + 30 ; $j++) { 
-                            if ($r[$j] == ' ') {
-                                $grammer .= '-';
-                            } else $grammer .= $r[$j];
-                        }
-                        $i += 29;
-                        $grammerIs = false;
-                    } 
+                    $k = $i;
+                    break;
                 }
             }
-            $spisok[] = array(
-                'fio' => $fio,
-                'phone' => $phone,
-                'language' => $languge,
-                'math' => $math,
-                'read' => $read,
-                'analogia' => $analogia,
-                'grammer' => $grammer,
-                'test_code' => $test_code
-            );
-            if ($test_code != $ucode) {
-                $spisok = [];
-                unlink($targetFile);
-                header("location: wrongCode.php");
-            }
         }
+        // 
         if (count($spisok)) {
             $countAbiturient = count($spisok);
             $ucode = rand(100000,999999);

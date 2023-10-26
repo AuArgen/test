@@ -36,7 +36,7 @@ $latynToKyryl = array(
     "{"=>"Ь",
     "#"=>"Ц",
     " "=> " ",
-    "*"=> "*"
+    "*"=> ""
 );
 require('header.php');
 $id_code = $_GET["id"];
@@ -82,7 +82,7 @@ if(isset($_POST["addTxt"])) {
                                 $code_test = substr($line, $j+1, strlen($line) - $j);
                                 $j -= 30;
                                 $grammer = substr($line, $j+1, 30);
-                                echo strlen($grammer),'==', $line[$j], '<br>';
+                                // echo strlen($grammer),'==', $line[$j], '<br>';
                                 $j -= 30;
                                 $ojt = substr($line, $j+1, 30);
                                 $j -= 30;
@@ -340,7 +340,7 @@ if(isset($_GET["delete"])) {
                     echo '         
                     <tr>
                         <th scope="row">'.$count++.'</th>
-                        <td >'.$row["file_name"].'</td>
+                        <td ><a href="'.$row["file"].'">'.$row["file_name"].'</a></td>
                         <td> '.$row["count"].'</td>
                         <td><a class="text-danger" href="?id=',$id_code,'&delete='.$row['id'].'">Удалить</a></td>
                     </tr>

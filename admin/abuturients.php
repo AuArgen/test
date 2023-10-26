@@ -13,6 +13,9 @@ require('header.php');
             </h5>
         </div>
         <div class="col-1 d-flex justify-content-end">
+            <a class="text-success" href="excel.php?id=<?php echo $id_code;?>">Excel</a>
+        </div>
+        <div class="col-1 d-flex justify-content-end">
             <a class="" href="index.php">Артка</a>
         </div>
     </div>

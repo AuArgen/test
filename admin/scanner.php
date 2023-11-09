@@ -245,9 +245,9 @@ if(isset($_POST["addTxt"])) {
                 }
                 $conn -> multi_query($q);
                 $mathB = intval($mathCount*1.033333334 + 5);
-                $analogiaB = intval($analogiaCount*1.0666667 + 5);
-                $ojtB = intval($readCount*1.0666667 + 5);
-                $grammerB = intval($grammerCount*1.0666667 + 5);
+                $analogiaB = intval($analogiaCount*1.93333333 + 5);
+                $ojtB = intval($readCount*1.7666666666 + 5);
+                $grammerB = intval($grammerCount*1.733333333 + 5);
                 $summa = $mathCount + $analogiaCount + $grammerCount + $readCount;
                 $ball = $mathB + $analogiaB + $ojtB + $grammerB;
                 $conn -> query("UPDATE `abuturent` SET math=$mathCount, analogia=$analogiaCount, grammer=$grammerCount, ojt=$readCount, mathB=$mathB,analogiaB=$analogiaB,grammerB=$grammerB,ojtB=$ojtB, allCount=$summa, allB=$ball  WHERE id = $id_abuturient");

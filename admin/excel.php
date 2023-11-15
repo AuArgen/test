@@ -1,6 +1,7 @@
 <?php 
     require("conn.php");
     $id_code = $_GET["id"]; 
+    $post_search = $_GET["search"]; 
     $print = '
     <table class="table table-striped hover" border=1>
     <thead>
@@ -23,7 +24,14 @@
     </thead>
     <tbody>';
                
-                    $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC");
+                    $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC LIMIT 0");
+                    if (is_numeric($post_search)) {
+                        $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code AND abuturent.phone LIKE '%$post_search%' ORDER BY abuturent.allB DESC");
+                    }else if ($post_search != '') {
+                        $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code AND abuturent.fio LIKE '%$post_search%' ORDER BY abuturent.allB DESC");
+                    }else {
+                        $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC");
+                    }
                     $count = 1;
                     while ($row2 = mysqli_fetch_array($abu)) {
                         $math = $row2["math"];

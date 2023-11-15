@@ -2,18 +2,22 @@
 if (!isset($_GET["id"]) || !is_numeric($_GET['id'])) {
     header("location:logout.php");
 }
+$post_search = ($_POST['search'] != '' ?$_POST['search']:'');
 $id_code = $_GET["id"];
 require('header.php');
 ?>
 <div class="container-lg">
-    <div class="row py-2 bg-light border-bottom">
+    <div class="row py-2 bg-light border-bottom align-items-center">
         <div class="col">
             <h5>
                 Абутуриенттер
             </h5>
         </div>
+        <form class="col-3" method='post'>
+            <input type="search" name='search' value="<?php echo $post_search;?>" placeholder="Издоо: ФИО же телефон номер" class="form-control">
+        </form>
         <div class="col-1 d-flex justify-content-end">
-            <a class="text-success" href="excel.php?id=<?php echo $id_code;?>">Excel</a>
+            <a class="text-success" href="excel.php?id=<?php echo $id_code,'&search=',$post_search;?>">Excel</a>
         </div>
         <div class="col-1 d-flex justify-content-end">
             <a class="" href="index.php">Артка</a>
@@ -36,7 +40,15 @@ require('header.php');
         </thead>
         <tbody>
             <?php
-                    $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC");
+
+                    $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC LIMIT 0");
+                    if (is_numeric($post_search)) {
+                        $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code AND abuturent.phone LIKE '%$post_search%' ORDER BY abuturent.allB DESC");
+                    }else if ($post_search != '') {
+                        $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code AND abuturent.fio LIKE '%$post_search%' ORDER BY abuturent.allB DESC");
+                    }else {
+                        $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC");
+                    }
                     $count = 1;
                     while ($row2 = mysqli_fetch_array($abu)) {
                         $math = $row2["math"];

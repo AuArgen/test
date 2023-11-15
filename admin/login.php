@@ -13,6 +13,7 @@
     if ($l == $login && $p == $pass) {
         $_SESSION["login"] = $login;
         $_SESSION["password"] = $pass;
+        header("location:index.php");
     }
  }
 ?>

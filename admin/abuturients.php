@@ -31,14 +31,12 @@ require('header.php');
                 <th scope="col">Окуу жана тушунуу</th>
                 <th scope="col">Граматтика</th>
                 <th scope="col">Жалпы</th>
+                <th scope="col">Дата</th>
             </tr>
         </thead>
         <tbody>
             <?php
-                $get = $conn -> query("SELECT * FROM scanner WHERE id_code=$id_code");
-                while ($row = mysqli_fetch_array($get)) {
-                    $id_scanner = $row["id"];
-                    $abu = $conn -> query("SELECT * FROM abuturent WHERE id_scanner=$id_scanner ORDER BY allCount DESC");
+                    $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC");
                     $count = 1;
                     while ($row2 = mysqli_fetch_array($abu)) {
                         $math = $row2["math"];
@@ -65,10 +63,10 @@ require('header.php');
                             <td> '.$ojt.'/'.$ojtB.'</td>
                             <td> '.$grammer.'/'.$grammerB.'</td>
                             <td> '.$summa.'/'.$ball.'</td>
+                            <td> '.$row2['date'].'</td>
                         </tr>
                         ';
                     }
-                } 
             ?>
         </tbody>
     </table>

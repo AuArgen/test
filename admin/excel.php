@@ -2,7 +2,7 @@
     require("conn.php");
     $id_code = $_GET["id"]; 
     $print = '
-    <table class="table table-striped hover">
+    <table class="table table-striped hover" border=1>
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -18,13 +18,12 @@
             <th scope="col">Граматика балл</th>
             <th scope="col">Жалпы</th>
             <th scope="col">Жалпы балл</th>
+            <th scope="col">Дата</th>
         </tr>
     </thead>
     <tbody>';
-                $get = $conn -> query("SELECT * FROM scanner WHERE id_code=$id_code");
-                while ($row = mysqli_fetch_array($get)) {
-                    $id_scanner = $row["id"];
-                    $abu = $conn -> query("SELECT * FROM abuturent WHERE id_scanner=$id_scanner ORDER BY allCount DESC");
+               
+                    $abu = $conn -> query("SELECT abuturent.* FROM abuturent INNER JOIN scanner on abuturent.id_scanner = scanner.id WHERE id_code=$id_code ORDER BY abuturent.allB DESC");
                     $count = 1;
                     while ($row2 = mysqli_fetch_array($abu)) {
                         $math = $row2["math"];
@@ -40,7 +39,7 @@
                         $print.='   
                         <tr>
                             <td scope="row">'.$count++.'</td>
-                            <td > '.$row2["fio"].'</td>
+                            <td> <a href="http://test/admin/link.php?id='.$row2['id'].'" target="_blank"> '.htmlspecialchars($row2["fio"]).'</a></td>
                             <td> '.$row2["phone"].'</td>
                             <td> '.$math.'</td>
                             <td>'.$mathB.'</td>
@@ -52,10 +51,10 @@
                             <td>'.$grammerB.'</td>
                             <td> '.$summa.'</td>
                             <td>'.$ball.'</td>
+                            <td>'.$row2["date"].'</td>
                         </tr>
                         ';
                     }
-                } 
                 $print .='</tbody>
                 </table>';
                 header ("Content-Type:application/xls");

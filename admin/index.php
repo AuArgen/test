@@ -52,8 +52,11 @@ if(isset($_GET["delete"])) {
                         $countAbiturient += $row2["count"];
                     }
                     $have = "<span class='text-success'>Бар</span>";
-                    $get2 = $conn -> query("SELECT * FROM test WHERE id_code=$id_code LIMIT 1");
-                    if (!mysqli_num_rows($get2)) {
+                    $get2 = $conn -> query("SELECT * FROM test WHERE type=1 and  id_code=$id_code LIMIT 1");
+                    $get3 = $conn -> query("SELECT * FROM test WHERE type=2 and  id_code=$id_code LIMIT 1");
+                    $get4 = $conn -> query("SELECT * FROM test WHERE type=3 and  id_code=$id_code LIMIT 1");
+                    $get5 = $conn -> query("SELECT * FROM test WHERE type=4 and  id_code=$id_code LIMIT 1");
+                    if (!mysqli_num_rows($get2) || !mysqli_num_rows($get3) || !mysqli_num_rows($get4) || !mysqli_num_rows($get5)) {
                         $have = "<span class='text-danger'>Жок</span>";
                     }
                     echo '         

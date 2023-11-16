@@ -2,7 +2,7 @@
   require("admin/conn.php");
   $phone = '';
   $block = "d-none";
-  if (isset($_POST["phone"])) {
+  if (intval(isset($_POST["phone"]))) {
     $phone = $_POST["phone"];
     $block = "d-block";
   }
@@ -35,7 +35,7 @@
     </span>
     <div class="input-group flex-nowrap">
       <span class="input-group-text" id="addon-wrapping"> <i class="fa fa-phone"></i> </span>
-      <input type="tel" class="form-control" name="phone" placeholder="0555123456" required="" minlength="10" maxlength="1000" aria-describedby="addon-wrapping">
+      <input type="tel" class="form-control" name="phone" placeholder="0555123456" required="" minlength="10" maxlength="10" aria-describedby="addon-wrapping">
     </div>
     <button class="btn btn-primary mt-2 form-control">Найти результат</button>
   </form>
